@@ -1,7 +1,7 @@
 Flask==3.0.2
 Flask-Login==0.6.2
-opencv-python-headless==4.9.0.80  # Versão mais nova com suporte a Python 3.13
-numpy==2.0.0  # Versão compatível com Python 3.13
+opencv-python-headless==4.9.0.80
+numpy==1.26.4  # Versão estável mais recente da série 1.x
 python-dotenv==1.0.0
 psycopg2-binary==2.9.9
 Werkzeug==3.0.1
