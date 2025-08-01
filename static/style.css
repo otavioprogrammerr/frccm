@@ -1,0 +1,263 @@
+/* style.css - Tema Militar */
+:root {
+    --verde-militar: #4B5320;
+    --verde-escuro: #3A4A3D;
+    --bege-militar: #C2B280;
+    --marrom-camuflado: #7A6A5F;
+    --cinza-militar: #5F6A6A;
+    --preto-militar: #1A1A1A;
+    --branco-off: #F5F5F5;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--branco-off);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="50" height="50" x="0" y="0" fill="%234B5320" opacity="0.1"/><rect width="50" height="50" x="50" y="50" fill="%234B5320" opacity="0.1"/></svg>');
+    background-size: 30px 30px;
+}
+
+/* Cabeçalho Militar */
+header {
+    background: linear-gradient(to right, var(--verde-escuro), var(--verde-militar));
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    border-bottom: 3px solid var(--bege-militar);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    margin: 0;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Barra de Navegação Militar */
+.navbar {
+    background-color: var(--verde-militar) !important;
+    border-bottom: 2px solid var(--bege-militar);
+    padding: 0.5rem 1rem;
+}
+
+.nav-link {
+    color: white !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s;
+    margin: 0 2px;
+}
+
+.nav-link:hover {
+    background-color: var(--verde-escuro);
+    transform: translateY(-2px);
+}
+
+.nav-link i {
+    margin-right: 5px;
+}
+
+/* Botões Militares */
+.btn {
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background-color: var(--verde-militar);
+}
+
+.btn-danger {
+    background-color: #8B0000;
+}
+
+.btn-success {
+    background-color: #006400;
+}
+
+.btn-info {
+    background-color: var(--cinza-militar);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    opacity: 0.9;
+}
+
+/* Cards Militares */
+.card {
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+    background-color: white;
+    border-left: 4px solid var(--verde-militar);
+}
+
+.card-header {
+    background-color: var(--verde-militar);
+    color: white;
+    font-weight: bold;
+    border-radius: 0 !important;
+    padding: 0.75rem 1.25rem;
+}
+
+/* Tabelas Militares */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table th {
+    background-color: var(--verde-militar);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(75, 83, 32, 0.05);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(75, 83, 32, 0.1);
+}
+
+/* Formulários Militares */
+.form-control, .form-select {
+    border: 1px solid var(--marrom-camuflado);
+    border-radius: 0;
+    padding: 0.5rem 0.75rem;
+    background-color: rgba(255,255,255,0.9);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--verde-militar);
+    box-shadow: 0 0 0 0.25rem rgba(75, 83, 32, 0.25);
+}
+
+/* Rodapé Militar */
+footer {
+    background: linear-gradient(to right, var(--verde-escuro), var(--verde-militar));
+    color: white;
+    padding: 0.75rem 0;
+    margin-top: auto;
+    border-top: 2px solid var(--bege-militar);
+    font-size: 0.85rem;
+}
+
+footer a {
+    color: var(--bege-militar);
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+footer a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* Elementos de Vídeo */
+#video, #videoCaptura {
+    width: 100%;
+    background-color: var(--preto-militar);
+    border: 2px solid var(--bege-militar);
+    border-radius: 0;
+}
+
+/* Alertas e Notificações */
+.alert {
+    border-radius: 0;
+    border-left: 4px solid;
+    padding: 0.75rem 1.25rem;
+}
+
+.alert-danger {
+    border-left-color: #8B0000;
+}
+
+.alert-success {
+    border-left-color: #006400;
+}
+
+.toast {
+    border-radius: 0;
+    border-left: 4px solid var(--verde-militar);
+}
+
+/* Efeitos Especiais */
+.flash-effect {
+    background-color: rgba(194, 178, 128, 0.7);
+}
+
+/* Badges Militares */
+.badge {
+    border-radius: 0;
+    font-weight: 600;
+    padding: 0.35em 0.65em;
+    text-transform: uppercase;
+    font-size: 0.75em;
+    letter-spacing: 0.5px;
+}
+
+.badge.bg-success {
+    background-color: var(--verde-militar) !important;
+}
+
+/* Modal Militar */
+.modal-content {
+    border-radius: 0;
+    border: none;
+    border-top: 4px solid var(--verde-militar);
+}
+
+.modal-header {
+    background-color: var(--verde-militar);
+    color: white;
+}
+
+/* Ícones */
+.bi {
+    vertical-align: middle;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .navbar-nav {
+        background-color: var(--verde-escuro);
+        padding: 10px;
+        margin-top: 5px;
+    }
+    
+    .nav-link {
+        margin: 2px 0;
+    }
+    
+    header h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Efeito de camuflagem para fundos opcionais */
+.camouflage-bg {
+    background-color: var(--bege-militar);
+    background-image: 
+        radial-gradient(var(--verde-militar) 20%, transparent 20%),
+        radial-gradient(var(--marrom-camuflado) 20%, transparent 20%);
+    background-position: 0 0, 10px 10px;
+    background-size: 20px 20px;
+}

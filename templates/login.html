@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0">Acesso ao Sistema</h4>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger alert-dismissible fade show">
+                    {{ error }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endif %}
+                
+                <form method="POST" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Usuário:</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="invalid-feedback">Por favor, informe o usuário</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Senha:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="invalid-feedback">Por favor, informe a senha</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-box-arrow-in-right"></i> Entrar
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center text-muted">
+                <small>Sistema de Controle de Atrasos - CCM Olavo Bilac</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Validação do formulário
+(() => {
+  'use strict'
+  const forms = document.querySelectorAll('.needs-validation')
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+</script>
+{% endblock %}

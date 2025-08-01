@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Gerenciar Alunos</h2>
+    
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Lista de Alunos Cadastrados</span>
+            <a href="/cadastro" class="btn btn-sm btn-success">
+                <i class="bi bi-plus-circle"></i> Cadastrar Novo Aluno
+            </a>
+        </div>
+        
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Turno</th>
+                            <th>Turma</th>
+                            <th>Registros</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for aluno in alunos %}
+                        <tr>
+                            <td>{{ aluno[1] }}</td>
+                            <td>{{ 'Manhã' if aluno[2] == 'manha' else 'Tarde' if aluno[2] == 'tarde' else aluno[2] }}</td>
+                            <td>{{ aluno[3] }}</td>
+                            <td>{{ aluno[4] }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-info btn-ver-atrasos" 
+                                        data-aluno-id="{{ aluno[0] }}" 
+                                        data-aluno-nome="{{ aluno[1] }}">
+                                    <i class="bi bi-clock-history"></i> Atrasos
+                                </button>
+                                <button class="btn btn-sm btn-danger deletar-aluno" 
+                                        data-id="{{ aluno[0] }}" 
+                                        data-nome="{{ aluno[1] }}">
+                                    <i class="bi bi-trash"></i> Deletar
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Deleção -->
+<div class="modal fade" id="confirmarDelecaoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Deleção</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja deletar o aluno <strong id="nomeAlunoModal"></strong>?</p>
+                <p class="text-danger">Esta ação não pode ser desfeita e irá apagar todos os registros e fotos associadas.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmarDelecao">Confirmar Deleção</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para mostrar os atrasos -->
+<div class="modal fade" id="atrasosModal" tabindex="-1" aria-labelledby="atrasosModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="atrasosModalLabel">Registros de Atraso</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 id="nome-aluno-modal" class="mb-3"></h6>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-atrasos">
+                            <!-- Os dados serão preenchidos via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Variáveis para deleção
+    let alunoId, alunoNome;
+    const confirmarDelecaoModal = new bootstrap.Modal(document.getElementById('confirmarDelecaoModal'));
+    
+    // Configurar modal de confirmação de deleção
+    document.querySelectorAll('.deletar-aluno').forEach(btn => {
+        btn.addEventListener('click', function() {
+            alunoId = this.dataset.id;
+            alunoNome = this.dataset.nome;
+            document.getElementById('nomeAlunoModal').textContent = alunoNome;
+            confirmarDelecaoModal.show();
+        });
+    });
+    
+    // Confirmar deleção
+    document.getElementById('confirmarDelecao').addEventListener('click', function() {
+        confirmarDelecaoModal.hide();
+        
+        fetch('/api/deletar_aluno', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: alunoId })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na requisição');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                showToast(data.message, 'success');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showToast(data.message, 'danger');
+            }
+        })
+        .catch(error => {
+            showToast('Erro ao comunicar com o servidor', 'danger');
+        });
+    });
+
+    // Função para carregar os atrasos do aluno
+    function carregarAtrasos(alunoId, alunoNome) {
+        fetch(`/api/registros_aluno/${alunoId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar atrasos');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('nome-aluno-modal').textContent = alunoNome;
+                    const tabela = document.getElementById('tabela-atrasos');
+                    tabela.innerHTML = '';
+                    
+                    if (data.atrasos.length === 0) {
+                        tabela.innerHTML = '<tr><td colspan="3" class="text-center">Nenhum atraso registrado</td></tr>';
+                    } else {
+                        data.atrasos.forEach(atraso => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${atraso.data}</td>
+                                <td>${atraso.hora}</td>
+                                <td><span class="badge bg-danger">${atraso.status}</span></td>
+                            `;
+                            tabela.appendChild(row);
+                        });
+                    }
+                    
+                    // Mostra a modal
+                    const modal = new bootstrap.Modal(document.getElementById('atrasosModal'));
+                    modal.show();
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao carregar atrasos:', error);
+                showToast('Erro ao carregar os atrasos do aluno', 'danger');
+            });
+    }
+    
+    // Adiciona os eventos de clique aos botões "Ver Atrasos"
+    document.querySelectorAll('.btn-ver-atrasos').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const alunoId = this.getAttribute('data-aluno-id');
+            const alunoNome = this.getAttribute('data-aluno-nome');
+            carregarAtrasos(alunoId, alunoNome);
+        });
+    });
+});
+
+function showToast(message, type) {
+    // Implementação da função showToast (se já não existir)
+    const toastContainer = document.getElementById('toast-container') || createToastContainer();
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center text-white bg-${type} border-0 show`;
+    toast.setAttribute('role', 'alert');
+    toast.setAttribute('aria-live', 'assertive');
+    toast.setAttribute('aria-atomic', 'true');
+    
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">
+                ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+    
+    toastContainer.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 150);
+    }, 3000);
+}
+
+function createToastContainer() {
+    const container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'position-fixed bottom-0 end-0 p-3';
+    container.style.zIndex = '11';
+    document.body.appendChild(container);
+    return container;
+}
+</script>
+{% endblock %}
