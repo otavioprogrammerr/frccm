@@ -6,3 +6,4 @@ python-dotenv==1.0.0
 psycopg2-binary==2.9.9  # Versão atualizada
 Werkzeug==2.3.7
 setuptools==70.0.0  # Adicionado explicitamente
+gunicorn==21.2.0
